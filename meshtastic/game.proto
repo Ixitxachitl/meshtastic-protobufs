@@ -42,6 +42,13 @@ message GameLeaderboardEntry {
    * Score value.
    */
   uint32 score = 3;
+
+  /*
+   * Random nonce generated once when this score is recorded locally.
+   * Used by receivers to deduplicate periodic table re-broadcasts.
+   * Paired with node_num as the dedup key: (node_num, score_id).
+   */
+  uint32 score_id = 4;
 }
 
 /*
