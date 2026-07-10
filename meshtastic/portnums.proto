@@ -293,6 +293,13 @@ enum PortNum {
   ATAK_FORWARDER = 257;
 
   /*
+   * Meshtastic games (Snake, Tetris) high-score sharing.
+   * See game.proto for message definitions.
+   * ENCODING: protobuf
+   */
+  GAME_APP = 258;
+
+  /*
    * Currently we limit port nums to no higher than this value
    */
   MAX = 511;

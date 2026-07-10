@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package meshtastic;
+
+option java_package = "com.geeksville.mesh";
+option java_outer_classname = "GameProtos";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/meshtastic/go/generated";
+option csharp_namespace = "Meshtastic.Protobuf";
+option swift_prefix = "Meshtastic";
+
+/*
+ * Which game a leaderboard belongs to.
+ */
+enum GameType {
+  /*
+   * Snake
+   */
+  GAME_SNAKE = 0;
+
+  /*
+   * Tetris
+   */
+  GAME_TETRIS = 1;
+}
+
+/*
+ * One entry in a game leaderboard.
+ */
+message GameLeaderboardEntry {
+  /*
+   * Node number of the scorer (0 = unknown/remote).
+   */
+  uint32 node_num = 1;
+
+  /*
+   * Player short name (up to 4 characters, matches owner.short_name).
+   */
+  string short_name = 2;
+
+  /*
+   * Score value.
+   */
+  uint32 score = 3;
+}
+
+/*
+ * Leaderboard broadcast for a single game.
+ * Used for both single-score announcements (1 entry) and full periodic
+ * table broadcasts (up to 5 entries).  Sent on GAME_APP portnum.
+ * Receivers merge all entries into their local top-5 table.
+ */
+message GameLeaderboard {
+  /*
+   * Which game this leaderboard belongs to.
+   */
+  GameType game = 1;
+
+  /*
+   * Leaderboard entries, highest score first.  1 entry = single announcement;
+   * up to 5 entries = periodic full-table broadcast.
+   */
+  repeated GameLeaderboardEntry entries = 2;
+}
