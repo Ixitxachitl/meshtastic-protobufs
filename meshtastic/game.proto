@@ -22,6 +22,16 @@ enum GameType {
    * Tetris
    */
   GAME_TETRIS = 1;
+
+  /*
+   * Breakout
+   */
+  GAME_BREAKOUT = 2;
+
+  /*
+   * Chirpy Runner
+   */
+  GAME_CHIRPY_RUNNER = 3;
 }
 
 /*
