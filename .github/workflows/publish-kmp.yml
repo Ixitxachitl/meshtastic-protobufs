@@ -15,9 +15,28 @@ on:
         required: false
         type: boolean
         default: false
+  # Called by create_tag.yml right after a release tag is cut. Tags created
+  # with GITHUB_TOKEN do not fire the `push: tags` trigger above (GitHub's
+  # recursion guard), so the release flow invokes this workflow directly.
+  workflow_call:
+    inputs:
+      version:
+        description: "Version to publish (e.g. v1.2.3)."
+        required: true
+        type: string
+      dry_run:
+        description: "Dry run mode - build and publish to Maven Local only"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
+
+env:
+  GRADLE_CACHE_URL: ${{ secrets.GRADLE_CACHE_URL }}
+  GRADLE_CACHE_USERNAME: ${{ secrets.GRADLE_CACHE_USERNAME }}
+  GRADLE_CACHE_PASSWORD: ${{ secrets.GRADLE_CACHE_PASSWORD }}
 
 jobs:
   build-kmp:
@@ -59,6 +78,14 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
+      - name: Cache Konan (Kotlin/Native toolchain)
+        uses: actions/cache@v6
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('packages/kmp/build.gradle.kts', 'packages/kmp/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            konan-${{ runner.os }}-
+
       - name: Build KMP package
         run: packages/kmp/gradlew --no-daemon -p packages/kmp clean build -PVERSION_NAME=${{ steps.version.outputs.VERSION }}
 
@@ -86,6 +113,14 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
+
+      - name: Cache Konan (Kotlin/Native toolchain)
+        uses: actions/cache@v6
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('packages/kmp/build.gradle.kts', 'packages/kmp/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            konan-${{ runner.os }}-
 
       - name: Publish to Maven Central
         env:
