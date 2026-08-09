@@ -793,6 +793,26 @@ message Config {
      * If true, the device will display message bubbles on screen.
      */
     bool enable_message_bubbles = 14;
+
+    /*
+     * Order messages are listed in on the message screen.
+     */
+    enum MessageOrder {
+      /*
+       * Default. The newest message is at the top of the list, older messages follow below.
+       */
+      NEWEST_FIRST = 0;
+
+      /*
+       * The newest message is at the bottom of the list, older messages are above it.
+       */
+      NEWEST_LAST = 1;
+    }
+
+    /*
+     * Whether the newest message appears at the top or the bottom of the message screen.
+     */
+    MessageOrder message_order = 15;
   }
 
   /*
