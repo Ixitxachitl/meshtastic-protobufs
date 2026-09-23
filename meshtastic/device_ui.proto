@@ -95,6 +95,14 @@ message DeviceUIConfig {
   GpsCoordinateFormat gps_format = 19;
 
   /*
+   * ST7789 VCOM setpoint (register 0xBB), as the raw register value: 0.1V plus 0.025V a step.
+   * A value that does not suit the panel leaves a DC bias on the liquid crystal, seen as a faint
+   * image of whatever sat on screen. Tuned per unit rather than per model, so it is stored here
+   * instead of only being compiled in. Unset means keep the value the firmware was built with.
+   */
+  optional uint32 panel_vcom = 20;
+
+  /*
    * How the GPS coordinates are displayed on the OLED screen.
    */
   enum GpsCoordinateFormat {
