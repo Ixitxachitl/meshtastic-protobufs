@@ -1,5 +1,7 @@
 *InterdeviceMessage.nmea max_size:1024
-*InterdeviceMessage.beep int_size:16
+*Beep.notes max_count:64
+*Note.frequency int_size:16
+*Note.duration_ms int_size:16
 *InterdeviceMessage.i2c_scan_result max_size:128
 *I2CTransaction.write_data max_size:256
 *I2CResult.read_data max_size:256

@@ -20,7 +20,7 @@ enum InterdeviceVersion {
   // Never use 1: ping/pong were bools before the handshake existed, and a
   // bool true is the same varint on the wire as the number 1, so firmware
   // predating the handshake would pass it.
-  INTERDEVICE_VERSION_CURRENT = 2;
+  INTERDEVICE_VERSION_CURRENT = 3;
 }
 
 // Defines the supported file operations
@@ -152,6 +152,28 @@ message I2CResult {
   bytes read_data = 2; // Data read from the device, empty for write-only transactions
 }
 
+// One step of a melody: hold `frequency` for `duration_ms`. A frequency of
+// zero is a rest, which is not the same as leaving the step out: a rest is
+// what tells two notes of the same pitch apart from one note twice as long.
+message Note {
+  uint32 frequency = 1; // Hz, 0 = rest (stays silent for the duration)
+  uint32 duration_ms = 2; // how long the note or rest is held
+}
+
+// Play a melody on the buzzer of the co-processor. A whole tune travels in
+// one message, so the player is handed a finite list instead of having to
+// guess from a gap in arrival times where a run of single beeps ended.
+message Beep {
+  // The notes, played back to back in the order given. An empty list stops
+  // playback and drops whatever is still queued.
+  repeated Note notes = 1;
+  // Queue these notes behind what is already playing instead of replacing
+  // it, so a tune longer than the per-message limit (the max_count in
+  // interdevice.options) can be sent in several messages and still play
+  // gaplessly. Ignored when notes is empty: a stop takes effect at once.
+  bool append = 2;
+}
+
 // Main message for interdevice communication
 message InterdeviceMessage {
   // Correlates a response with its request: responses echo the id of the
@@ -160,7 +182,7 @@ message InterdeviceMessage {
   // The message data
   oneof data {
     string nmea = 1;
-    uint32 beep = 2;
+    Beep beep = 2;
     I2CTransaction i2c_transaction = 3;
     I2CResult i2c_result = 4;
     bool i2c_scan = 5; // Request: scan the secondary I2C bus
