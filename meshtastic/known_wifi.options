@@ -1,0 +1,3 @@
+*KnownWifiNetworks.networks max_count:8
+*KnownWifiNetwork.ssid max_size:33
+*KnownWifiNetwork.psk max_size:65

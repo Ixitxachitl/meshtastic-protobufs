@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package meshtastic;
+
+option csharp_namespace = "Meshtastic.Protobufs";
+option go_package = "github.com/meshtastic/go/generated";
+option java_outer_classname = "KnownWifiProtos";
+option java_package = "org.meshtastic.proto";
+option swift_prefix = "";
+
+/*
+ * Wi-Fi networks this device has joined, kept on the device so it can rejoin any of them.
+ * Holds passwords: never sent to clients.
+ */
+message KnownWifiNetworks {
+  /*
+   * Most recently joined first
+   */
+  repeated KnownWifiNetwork networks = 1;
+}
+
+/*
+ * One remembered Wi-Fi network
+ */
+message KnownWifiNetwork {
+  /*
+   * Network name
+   */
+  string ssid = 1;
+
+  /*
+   * Password; empty for an open network
+   */
+  string psk = 2;
+}

@@ -253,6 +253,93 @@ message Map {
    * Off means the map draws only from tiles already stored locally.
    */
   bool online_tiles = 4;
+
+  /*
+   * The last navigation target picked on the map
+   */
+  NavTarget nav_target = 5;
+
+  /*
+   * How the map is oriented while navigating with Follow Me on
+   */
+  MapViewMode view_mode = 6;
+}
+
+/*
+ * Map orientation while navigating
+ */
+enum MapViewMode {
+  /*
+   * North at the top
+   */
+  NORTH_UP = 0;
+
+  /*
+   * Direction of travel at the top
+   */
+  HEADING_UP = 1;
+
+  /*
+   * Direction of travel at the top, with the map tilted away like a car navigator
+   */
+  TILTED = 2;
+}
+
+/*
+ * How a route to a navigation target is travelled
+ */
+enum NavTravelMode {
+  /*
+   * By car
+   */
+  CAR = 0;
+
+  /*
+   * By bicycle
+   */
+  BICYCLE = 1;
+
+  /*
+   * On foot
+   */
+  WALK = 2;
+}
+
+/*
+ * A destination the map draws a line and distance to
+ */
+message NavTarget {
+  /*
+   * Where the target was when picked: fixed for a typed location, the last known position
+   * for a node or waypoint
+   */
+  sfixed32 latitude_i = 1;
+  sfixed32 longitude_i = 2;
+
+  /*
+   * Nonzero: the target is this node, and follows its live position
+   */
+  uint32 node_num = 3;
+
+  /*
+   * Nonzero: the target is this waypoint, and follows it if it moves
+   */
+  uint32 waypoint_id = 4;
+
+  /*
+   * Label shown for the target
+   */
+  string name = 5;
+
+  /*
+   * Was `active`, for a resume offer after reboot; saved routes replaced it
+   */
+  reserved 6;
+
+  /*
+   * How the route to the target is travelled
+   */
+  NavTravelMode travel_mode = 7;
 }
 
 enum CompassMode {

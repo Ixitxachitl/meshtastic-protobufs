@@ -10,4 +10,7 @@
 *NodeHighlight.node_name max_size:16
 *GeoPoint.zoom int_size:8
 *Map.style max_size:20
+*NavTarget.name max_size:32
+*NavTarget.travel_mode int_size:8
+*Map.view_mode int_size:8
 *DeviceUIConfig.panel_vcom int_size:8
