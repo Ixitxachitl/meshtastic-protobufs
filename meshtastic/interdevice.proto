@@ -28,7 +28,12 @@ enum FileOperation {
   GET = 0;
   POST = 1;
   PUT = 2;
-  DELETE = 3;
+  DELETE = 3; // Removes a file, or a directory that is empty
+  // Creates the directory at filepath, and any missing parents. OK when it
+  // already exists as a directory.
+  MKDIR = 4;
+  // Moves filepath to target_path, which must not exist yet.
+  RENAME = 5;
 }
 
 // Outcome of a file or directory operation. The requester must be able to
@@ -52,7 +57,7 @@ enum FileStatus {
 
 // Message for file operations
 message FileTransfer {
-  FileOperation operation = 1; // File operation (GET, POST, PUT, DELETE)
+  FileOperation operation = 1; // File operation (GET, POST, PUT, DELETE, MKDIR, RENAME)
   string filepath = 2; // Path of the file on the SD card
   bytes filedata = 3; // Chunk content (POST/PUT request, GET response)
   FileStatus status = 4; // Response: outcome of the operation
@@ -63,6 +68,7 @@ message FileTransfer {
   // chunk; larger requests are truncated, visible in the filedata length.
   uint32 length = 7;
   uint64 file_size = 8; // GET response: total size of the file
+  string target_path = 9; // RENAME request: the path to move filepath to
 }
 
 // Message for structured directory listing
@@ -78,6 +84,9 @@ message DirectoryListing {
   string message = 4; // Response: human readable detail, may be empty
   uint32 offset = 5; // Request: skip this many entries (paging)
   uint32 total_count = 6; // Response: total number of entries in the directory
+  // Response: the size of each entry in filenames, in the same order; 0 for a
+  // subdirectory
+  repeated uint64 sizes = 7;
 }
 
 // A single I2C transaction: an optional write followed by an optional
