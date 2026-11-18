@@ -29,11 +29,9 @@ enum FileOperation {
   POST = 1;
   PUT = 2;
   DELETE = 3; // Removes a file, or a directory that is empty
-  // Creates the directory at filepath, and any missing parents. OK when it
-  // already exists as a directory.
-  MKDIR = 4;
-  // Moves filepath to target_path, which must not exist yet.
-  RENAME = 5;
+  MKDIR = 4; // Create a directory, parents included; OK when it already exists
+  RMDIR = 5; // Remove an empty directory; OK when it is already gone
+  RENAME = 6; // Move filepath to target_path, which must not exist yet
 }
 
 // Outcome of a file or directory operation. The requester must be able to
@@ -52,12 +50,13 @@ enum FileStatus {
   // recognize its own chunk as already written after a lost response).
   FILE_OFFSET_CONFLICT = 5;
   FILE_IO_ERROR = 6;
-  FILE_NOT_A_FILE = 7; // path is a directory (GET) or not one (listing)
+  FILE_NOT_A_FILE = 7; // path is a directory (GET) or not one (listing, MKDIR, RMDIR)
+  FILE_NOT_EMPTY = 8; // RMDIR: the directory still has entries
 }
 
 // Message for file operations
 message FileTransfer {
-  FileOperation operation = 1; // File operation (GET, POST, PUT, DELETE, MKDIR, RENAME)
+  FileOperation operation = 1; // File operation (GET, POST, PUT, DELETE, MKDIR, RMDIR, RENAME)
   string filepath = 2; // Path of the file on the SD card
   bytes filedata = 3; // Chunk content (POST/PUT request, GET response)
   FileStatus status = 4; // Response: outcome of the operation
