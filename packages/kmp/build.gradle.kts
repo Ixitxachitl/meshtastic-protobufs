@@ -1,7 +1,7 @@
 plugins {
     kotlin("multiplatform") version "2.4.21"
-    id("com.android.kotlin.multiplatform.library") version "9.5.1"
-    id("com.squareup.wire") version "7.2.1"
+    id("com.android.kotlin.multiplatform.library") version "9.5.2"
+    id("com.squareup.wire") version "7.2.2"
     id("com.vanniktech.maven.publish") version "0.37.0"
 }
 
@@ -81,7 +81,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api("com.squareup.wire:wire-runtime:7.2.1")
+                api("com.squareup.wire:wire-runtime:7.2.2")
             }
         }
     }
