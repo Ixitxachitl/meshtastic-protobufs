@@ -1063,7 +1063,7 @@ message Config {
     /*
      * Whether the newest message appears at the top or the bottom of the message screen.
      */
-    MessageOrder message_order = 15;
+    MessageOrder message_order = 17;
   }
 
   /*
